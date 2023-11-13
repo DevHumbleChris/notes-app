@@ -1,5 +1,6 @@
 package com.montana.inc.notes
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -86,7 +88,21 @@ fun Home(navHostController: NavHostController, modifier: Modifier = Modifier) {
             }
 
             Spacer(modifier = modifier.height(30.dp))
-            Note()
+//            AddNote()
+            Column (
+                modifier = modifier
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.rafiki),
+                    contentDescription = "Create your first note",
+                    modifier = modifier.requiredSize(250.dp)
+                )
+                Spacer(modifier = modifier.height(5.dp))
+                Text(text = "Create your first note", color = Color.White, fontSize = 20.sp)
+            }
         }
 
         FloatingActionButton(

@@ -15,14 +15,14 @@ import androidx.compose.ui.unit.sp
 
 @Preview
 @Composable
-fun Note(modifier: Modifier = Modifier) {
+fun AddNote(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxWidth()
             .background(Color(android.graphics.Color.parseColor("#91F48F")), shape = RoundedCornerShape(percent = 10)),
     ){
         Text(
-            text = "Are you seriously working faiohias sf asfasfoafas fasfasomfasfas",
+            text = "Are you seriously working",
             color = Color.Black,
             modifier = Modifier.padding(20.dp),
             fontSize = 20.sp
