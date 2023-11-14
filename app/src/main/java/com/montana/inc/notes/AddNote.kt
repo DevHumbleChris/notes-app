@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.sp
 
 @Preview
 @Composable
-fun AddNote(modifier: Modifier = Modifier) {
+fun AddNote(modifier: Modifier = Modifier, title: String, description: String) {
     Column(
         modifier = modifier
             .fillMaxWidth()

@@ -6,7 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun Navs() {
+fun Navs(viewModel: NotesViewModel) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "Home") {
@@ -17,7 +17,7 @@ fun Navs() {
             SearchScreen(navController)
         }
         composable(route = "EditorScreen") {
-            EditorScreen(navController)
+            EditorScreen(navController, viewModel = viewModel)
         }
     }
 }

@@ -22,10 +22,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,14 +34,12 @@ import androidx.navigation.NavHostController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditorScreen(navHostController: NavHostController, modifier: Modifier = Modifier) {
-    var title by remember {
-        mutableStateOf("")
-    }
-
-    var note by remember {
-        mutableStateOf("")
-    }
+fun EditorScreen(
+    navHostController: NavHostController,
+    modifier: Modifier = Modifier,
+    viewModel: NotesViewModel,
+) {
+    val state = viewModel.currentState.collectAsState().value
     Column(
         modifier = modifier.fillMaxSize()
             .background(Color(android.graphics.Color.parseColor(("#252525"))))
@@ -90,7 +85,9 @@ fun EditorScreen(navHostController: NavHostController, modifier: Modifier = Modi
                 }
                 Spacer(modifier = modifier.width(10.dp))
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        viewModel.addNotes()
+                    },
                     modifier = Modifier
                         .height(50.dp)
                         .width(50.dp),
@@ -108,9 +105,9 @@ fun EditorScreen(navHostController: NavHostController, modifier: Modifier = Modi
         }
         Spacer(modifier = modifier.height(30.dp))
         OutlinedTextField(
-            value = title,
+            value = state.title,
             onValueChange = { text ->
-                title = text
+                viewModel.setTitle(title = text)
             },
             placeholder = { Text("Title", fontSize = 30.sp, color = Color(android.graphics.Color.parseColor("#9A9A9A"))) },
             modifier = modifier
@@ -128,9 +125,9 @@ fun EditorScreen(navHostController: NavHostController, modifier: Modifier = Modi
         )
         Spacer(modifier = modifier.height(10.dp))
         OutlinedTextField(
-            value = note,
+            value = state.description,
             onValueChange = { text ->
-                note = text
+                viewModel.setDescription(description = text)
             },
             placeholder = { Text("Type something...", fontSize = 20.sp, color = Color(android.graphics.Color.parseColor("#9A9A9A"))) },
             modifier = modifier
