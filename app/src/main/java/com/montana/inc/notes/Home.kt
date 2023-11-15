@@ -23,13 +23,20 @@ import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -37,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Home(
     navHostController: NavHostController,
@@ -44,30 +52,26 @@ fun Home(
     viewModel: NotesViewModel
 ) {
     val state = viewModel.currentState.collectAsState().value
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color(android.graphics.Color.parseColor(("#252525"))))
-            .padding(20.dp)
-    ) {
-        Column {
-            Row(
-                modifier = modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Notes",
-                    fontSize = 30.sp,
-                    color = Color(android.graphics.Color.parseColor("#f1f1f1")))
-                Row {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = "Notes", fontSize = 30.sp)
+                },
+                actions = {
                     Button(
                         onClick = { /*TODO*/ },
                         modifier = Modifier
                             .height(50.dp)
                             .width(50.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(android.graphics.Color.parseColor("#3B3B3B"))),
-                        shape = RoundedCornerShape(percent = 50)
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(
+                                android.graphics.Color.parseColor(
+                                    "#3B3B3B"
+                                )
+                            )
+                        ),
+                        shape = RoundedCornerShape(percent = 30)
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.Search,
@@ -82,8 +86,14 @@ fun Home(
                         modifier = Modifier
                             .height(50.dp)
                             .width(50.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(android.graphics.Color.parseColor("#3B3B3B"))),
-                        shape = RoundedCornerShape(percent = 50)
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(
+                                android.graphics.Color.parseColor(
+                                    "#3B3B3B"
+                                )
+                            )
+                        ),
+                        shape = RoundedCornerShape(percent = 30)
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.Info,
@@ -92,10 +102,29 @@ fun Home(
                             modifier = modifier.requiredSize(26.dp)
                         )
                     }
-                }
+                },
+                colors = TopAppBarDefaults.smallTopAppBarColors(
+                    containerColor = Color(android.graphics.Color.parseColor("#252525")),
+                    titleContentColor = Color.White
+                ),
+                modifier = modifier.padding(6.dp)
+            )
+        },
+        containerColor = Color(android.graphics.Color.parseColor("#252525")),
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    navHostController.navigate("EditorScreen")
+                },
+                modifier = modifier.offset(x = 3.dp, y = (-20).dp)
+            ) {
+                Icon(Icons.Filled.Add, "Floating action button.")
             }
-
-            Spacer(modifier = modifier.height(30.dp))
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = modifier.padding(innerPadding)
+        ) {
             if (state.notes.isNotEmpty()) {
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(15.dp)
@@ -108,7 +137,7 @@ fun Home(
                     }
                 }
             } else {
-                Column (
+                Column(
                     modifier = modifier
                         .fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -123,17 +152,6 @@ fun Home(
                     Text(text = "Create your first note", color = Color.White, fontSize = 20.sp)
                 }
             }
-        }
-
-        FloatingActionButton(
-            onClick = {
-                navHostController.navigate("EditorScreen")
-            },
-            modifier = modifier
-                .align(alignment = Alignment.BottomEnd)
-                .offset(x = 3.dp, y = (-20).dp)
-        ) {
-            Icon(Icons.Filled.Add, "Floating action button.")
         }
     }
 }
