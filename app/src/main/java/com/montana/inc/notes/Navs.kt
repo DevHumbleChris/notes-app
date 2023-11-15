@@ -11,7 +11,7 @@ fun Navs(viewModel: NotesViewModel) {
 
     NavHost(navController = navController, startDestination = "Home") {
         composable(route = "Home") {
-            Home(navController)
+            Home(navController, viewModel = viewModel)
         }
         composable(route = "SearchScreen") {
             SearchScreen(navController)

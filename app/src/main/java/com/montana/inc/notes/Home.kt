@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -25,6 +27,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,7 +38,12 @@ import androidx.navigation.NavHostController
 
 
 @Composable
-fun Home(navHostController: NavHostController, modifier: Modifier = Modifier) {
+fun Home(
+    navHostController: NavHostController,
+    modifier: Modifier = Modifier,
+    viewModel: NotesViewModel
+) {
+    val state = viewModel.currentState.collectAsState().value
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -88,20 +96,32 @@ fun Home(navHostController: NavHostController, modifier: Modifier = Modifier) {
             }
 
             Spacer(modifier = modifier.height(30.dp))
-//            AddNote()
-            Column (
-                modifier = modifier
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.rafiki),
-                    contentDescription = "Create your first note",
-                    modifier = modifier.requiredSize(250.dp)
-                )
-                Spacer(modifier = modifier.height(5.dp))
-                Text(text = "Create your first note", color = Color.White, fontSize = 20.sp)
+            if (state.notes.isNotEmpty()) {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(15.dp)
+                ) {
+                    items(state.notes) { note ->
+                        AddNote(
+                            uuid = note.uuid,
+                            title = note.title,
+                        )
+                    }
+                }
+            } else {
+                Column (
+                    modifier = modifier
+                        .fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.rafiki),
+                        contentDescription = "Create your first note",
+                        modifier = modifier.requiredSize(250.dp)
+                    )
+                    Spacer(modifier = modifier.height(5.dp))
+                    Text(text = "Create your first note", color = Color.White, fontSize = 20.sp)
+                }
             }
         }
 
@@ -109,7 +129,9 @@ fun Home(navHostController: NavHostController, modifier: Modifier = Modifier) {
             onClick = {
                 navHostController.navigate("EditorScreen")
             },
-            modifier = modifier.align(alignment = Alignment.BottomEnd).offset(x = 3.dp, y = (-20).dp)
+            modifier = modifier
+                .align(alignment = Alignment.BottomEnd)
+                .offset(x = 3.dp, y = (-20).dp)
         ) {
             Icon(Icons.Filled.Add, "Floating action button.")
         }

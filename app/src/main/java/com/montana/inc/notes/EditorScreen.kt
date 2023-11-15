@@ -10,10 +10,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,6 +26,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,9 +46,51 @@ fun EditorScreen(
     modifier: Modifier = Modifier,
     viewModel: NotesViewModel,
 ) {
+    var showDialog by remember { mutableStateOf(false) }
     val state = viewModel.currentState.collectAsState().value
+
+    if (showDialog) {
+        AlertDialog(
+            icon = {
+                Icon(imageVector = Icons.Rounded.Info, contentDescription = "", modifier = modifier.size(40.dp))
+            },
+            onDismissRequest = {
+                showDialog = false
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showDialog = false
+                        viewModel.addNotes()
+                        navHostController.navigate("Home")
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(android.graphics.Color.parseColor("#30BE71"))),
+                    shape = RoundedCornerShape(percent = 30)
+                ) {
+                    Text("Save")
+                }
+            },
+            title = {
+                Text(text = "Save Changes!")
+            },
+            dismissButton = {
+                Button(
+                    onClick = {
+                        showDialog = false
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(android.graphics.Color.parseColor("#FF0000"))),
+                    shape = RoundedCornerShape(percent = 30),
+                ) {
+                    Text("Discard")
+                }
+            },
+            containerColor = Color(android.graphics.Color.parseColor("#C4C4C4"))
+        )
+    }
+
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
             .background(Color(android.graphics.Color.parseColor(("#252525"))))
             .padding(15.dp)
     ) {
@@ -53,6 +102,8 @@ fun EditorScreen(
             Button(
                 onClick = {
                     navHostController.navigate("Home")
+                    viewModel.setTitle(title = "")
+                    viewModel.setDescription(description = "")
                 },
                 modifier = Modifier
                     .height(50.dp)
@@ -67,6 +118,7 @@ fun EditorScreen(
                     modifier = modifier.requiredSize(26.dp)
                 )
             }
+
             Row {
                 Button(
                     onClick = { /*TODO*/ },
@@ -83,16 +135,19 @@ fun EditorScreen(
                         modifier = modifier.requiredSize(26.dp)
                     )
                 }
+
                 Spacer(modifier = modifier.width(10.dp))
+
                 Button(
                     onClick = {
-                        viewModel.addNotes()
+                        showDialog = true
                     },
                     modifier = Modifier
                         .height(50.dp)
                         .width(50.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(android.graphics.Color.parseColor("#3B3B3B"))),
-                    shape = RoundedCornerShape(percent = 30)
+                    shape = RoundedCornerShape(percent = 30),
+                    enabled = state.title.isNotBlank()
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.save),
@@ -103,9 +158,11 @@ fun EditorScreen(
                 }
             }
         }
+
         Spacer(modifier = modifier.height(30.dp))
+
         OutlinedTextField(
-            value = state.title,
+            value = viewModel.currentState.collectAsState().value.title,
             onValueChange = { text ->
                 viewModel.setTitle(title = text)
             },
@@ -113,19 +170,20 @@ fun EditorScreen(
             modifier = modifier
                 .fillMaxWidth(),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Transparent, // Set the focused border color to transparent
-                unfocusedBorderColor = Color.Transparent, // Set the unfocused border color to transparent
-                cursorColor = Color.White, // Set the cursor color
+                focusedBorderColor = Color.Transparent,
+                unfocusedBorderColor = Color.Transparent,
+                cursorColor = Color.White,
                 textColor = Color.White
             ),
-            singleLine = true,
             textStyle = TextStyle(
                 fontSize = 30.sp
             )
         )
+
         Spacer(modifier = modifier.height(10.dp))
+
         OutlinedTextField(
-            value = state.description,
+            value = viewModel.currentState.collectAsState().value.description,
             onValueChange = { text ->
                 viewModel.setDescription(description = text)
             },
@@ -133,15 +191,14 @@ fun EditorScreen(
             modifier = modifier
                 .fillMaxWidth(),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Transparent, // Set the focused border color to transparent
-                unfocusedBorderColor = Color.Transparent, // Set the unfocused border color to transparent
-                cursorColor = Color.White, // Set the cursor color,
+                focusedBorderColor = Color.Transparent,
+                unfocusedBorderColor = Color.Transparent,
+                cursorColor = Color.White,
                 textColor = Color.White
             ),
             textStyle = TextStyle(
                 fontSize = 20.sp
-            ),
-
+            )
         )
     }
 }
