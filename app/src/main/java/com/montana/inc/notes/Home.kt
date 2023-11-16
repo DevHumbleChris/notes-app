@@ -60,7 +60,9 @@ fun Home(
                 },
                 actions = {
                     Button(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                                  navHostController.navigate("SearchScreen")
+                        },
                         modifier = Modifier
                             .height(50.dp)
                             .width(50.dp),
@@ -127,7 +129,8 @@ fun Home(
         ) {
             if (state.notes.isNotEmpty()) {
                 LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(15.dp)
+                    verticalArrangement = Arrangement.spacedBy(15.dp),
+                    modifier = modifier.padding(18.dp)
                 ) {
                     items(state.notes) { note ->
                         AddNote(
