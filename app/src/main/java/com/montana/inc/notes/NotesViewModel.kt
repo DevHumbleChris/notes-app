@@ -1,5 +1,6 @@
 package com.montana.inc.notes
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,6 +12,23 @@ class NotesViewModel(): ViewModel() {
     private val _state = MutableStateFlow(NotesState())
 
     val currentState: StateFlow<NotesState> get() = _state.asStateFlow()
+    private val _query = mutableStateOf("")
+
+    var query: String
+        get() = _query.value
+        set(value) {
+            _query.value = value
+            setQueryResults()
+        }
+
+    private fun setQueryResults() {
+        val resultsSearch = _state.value.notes.filter {
+            it.title == _query.value
+        }
+        _state.update { it.copy(
+            searchResults = resultsSearch
+        ) }
+    }
 
     fun setTitle(title: String) {
         _state.update { it.copy(

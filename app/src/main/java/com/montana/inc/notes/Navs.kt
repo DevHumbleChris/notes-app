@@ -14,7 +14,7 @@ fun Navs(viewModel: NotesViewModel) {
             Home(navController, viewModel = viewModel)
         }
         composable(route = "SearchScreen") {
-            SearchScreen(navController)
+            SearchScreen(navController, viewModel = viewModel)
         }
         composable(route = "EditorScreen") {
             EditorScreen(navController, viewModel = viewModel)

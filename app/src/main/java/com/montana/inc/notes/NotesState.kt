@@ -5,7 +5,8 @@ import java.util.UUID
 data class NotesState(
     val notes: List<Note> = emptyList(),
     val title: String = "",
-    val description: String = ""
+    val description: String = "",
+    val searchResults: List<Note> = emptyList()
 )
 
 data class Note(
