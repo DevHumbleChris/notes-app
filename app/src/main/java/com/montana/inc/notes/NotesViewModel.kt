@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import java.util.UUID
 
-class NotesViewModel(): ViewModel() {
+class NotesViewModel() : ViewModel() {
     private val _state = MutableStateFlow(NotesState())
 
     val currentState: StateFlow<NotesState> get() = _state.asStateFlow()
@@ -25,32 +25,46 @@ class NotesViewModel(): ViewModel() {
         val resultsSearch = _state.value.notes.filter {
             it.title == _query.value
         }
-        _state.update { it.copy(
-            searchResults = resultsSearch
-        ) }
+        _state.update {
+            it.copy(
+                searchResults = resultsSearch,
+            )
+        }
     }
 
     fun setTitle(title: String) {
-        _state.update { it.copy(
-            title = title
-        ) }
+        _state.update {
+            it.copy(
+                title = title,
+            )
+        }
     }
 
     fun setDescription(description: String) {
-        _state.update { it.copy(
-            description = description
-        ) }
+        _state.update {
+            it.copy(
+                description = description,
+            )
+        }
     }
-
+    fun deleteNote(note: Note) {
+        _state.update { currentState ->
+            currentState.copy(
+                notes = currentState.notes - note
+            )
+        }
+    }
     fun addNotes() {
         val title = _state.value.title
         val description = _state.value.description
         val uuid = UUID.randomUUID()
 
-        _state.update { it.copy(
-            notes = it.notes + Note(title = title, description = description, uuid = uuid),
-            title = "",
-            description = "",
-        ) }
+        _state.update {
+            it.copy(
+                notes = it.notes + Note(title = title, description = description, uuid = uuid),
+                title = "",
+                description = "",
+            )
+        }
     }
 }
