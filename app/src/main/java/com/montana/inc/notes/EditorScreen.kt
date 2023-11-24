@@ -1,9 +1,7 @@
 package com.montana.inc.notes
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,7 +20,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,12 +27,12 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -43,6 +40,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,9 +48,14 @@ fun EditorScreen(
     navHostController: NavHostController,
     modifier: Modifier = Modifier,
     viewModel: NotesViewModel,
+    id: UUID? = null,
 ) {
     var showDialog by remember { mutableStateOf(false) }
     val state = viewModel.currentState.collectAsState().value
+
+    LaunchedEffect(key1 = Unit, block = {
+        viewModel.getNote(id)
+    })
 
     Scaffold(
         containerColor = Color(android.graphics.Color.parseColor("#252525")),
@@ -72,23 +75,23 @@ fun EditorScreen(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(
                                 android.graphics.Color.parseColor(
-                                    "#3B3B3B"
-                                )
-                            )
+                                    "#3B3B3B",
+                                ),
+                            ),
                         ),
-                        shape = RoundedCornerShape(percent = 30)
+                        shape = RoundedCornerShape(percent = 30),
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.ArrowBack,
                             contentDescription = "Search Icon",
                             tint = Color.White,
-                            modifier = modifier.requiredSize(26.dp)
+                            modifier = modifier.requiredSize(26.dp),
                         )
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
                     containerColor = Color(android.graphics.Color.parseColor("#252525")),
-                    navigationIconContentColor = Color.White
+                    navigationIconContentColor = Color.White,
                 ),
                 actions = {
                     Button(
@@ -99,17 +102,17 @@ fun EditorScreen(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(
                                 android.graphics.Color.parseColor(
-                                    "#3B3B3B"
-                                )
-                            )
+                                    "#3B3B3B",
+                                ),
+                            ),
                         ),
-                        shape = RoundedCornerShape(percent = 30)
+                        shape = RoundedCornerShape(percent = 30),
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.visibility),
                             contentDescription = "Search Icon",
                             tint = Color.White,
-                            modifier = modifier.requiredSize(26.dp)
+                            modifier = modifier.requiredSize(26.dp),
                         )
                     }
 
@@ -125,24 +128,24 @@ fun EditorScreen(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(
                                 android.graphics.Color.parseColor(
-                                    "#3B3B3B"
-                                )
-                            )
+                                    "#3B3B3B",
+                                ),
+                            ),
                         ),
                         shape = RoundedCornerShape(percent = 30),
-                        enabled = state.title.isNotBlank()
+                        enabled = state.title.isNotBlank(),
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.save),
                             contentDescription = "Search Icon",
                             tint = Color.White,
-                            modifier = modifier.requiredSize(26.dp)
+                            modifier = modifier.requiredSize(26.dp),
                         )
                     }
                 },
-                modifier = modifier.padding(6.dp)
+                modifier = modifier.padding(6.dp),
             )
-        }
+        },
     ) { innerPadding ->
         if (showDialog) {
             AlertDialog(
@@ -150,7 +153,7 @@ fun EditorScreen(
                     Icon(
                         imageVector = Icons.Rounded.Info,
                         contentDescription = "",
-                        modifier = modifier.size(40.dp)
+                        modifier = modifier.size(40.dp),
                     )
                 },
                 onDismissRequest = {
@@ -166,11 +169,11 @@ fun EditorScreen(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(
                                 android.graphics.Color.parseColor(
-                                    "#30BE71"
-                                )
-                            )
+                                    "#30BE71",
+                                ),
+                            ),
                         ),
-                        shape = RoundedCornerShape(percent = 30)
+                        shape = RoundedCornerShape(percent = 30),
                     ) {
                         Text("Save")
                     }
@@ -186,16 +189,16 @@ fun EditorScreen(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(
                                 android.graphics.Color.parseColor(
-                                    "#FF0000"
-                                )
-                            )
+                                    "#FF0000",
+                                ),
+                            ),
                         ),
                         shape = RoundedCornerShape(percent = 30),
                     ) {
                         Text("Discard")
                     }
                 },
-                containerColor = Color(android.graphics.Color.parseColor("#C4C4C4"))
+                containerColor = Color(android.graphics.Color.parseColor("#C4C4C4")),
             )
         }
 
@@ -203,9 +206,8 @@ fun EditorScreen(
             modifier = modifier
                 .fillMaxSize()
                 .background(Color(android.graphics.Color.parseColor(("#252525"))))
-                .padding(innerPadding)
+                .padding(innerPadding),
         ) {
-
             OutlinedTextField(
                 value = viewModel.currentState.collectAsState().value.title,
                 onValueChange = { text ->
@@ -215,7 +217,7 @@ fun EditorScreen(
                     Text(
                         "Title",
                         fontSize = 30.sp,
-                        color = Color(android.graphics.Color.parseColor("#9A9A9A"))
+                        color = Color(android.graphics.Color.parseColor("#9A9A9A")),
                     )
                 },
                 modifier = modifier
@@ -224,11 +226,11 @@ fun EditorScreen(
                     focusedBorderColor = Color.Transparent,
                     unfocusedBorderColor = Color.Transparent,
                     cursorColor = Color.White,
-                    textColor = Color.White
+                    textColor = Color.White,
                 ),
                 textStyle = TextStyle(
-                    fontSize = 30.sp
-                )
+                    fontSize = 30.sp,
+                ),
             )
 
             Spacer(modifier = modifier.height(10.dp))
@@ -242,7 +244,7 @@ fun EditorScreen(
                     Text(
                         "Type something...",
                         fontSize = 20.sp,
-                        color = Color(android.graphics.Color.parseColor("#9A9A9A"))
+                        color = Color(android.graphics.Color.parseColor("#9A9A9A")),
                     )
                 },
                 modifier = modifier
@@ -251,18 +253,17 @@ fun EditorScreen(
                     focusedBorderColor = Color.Transparent,
                     unfocusedBorderColor = Color.Transparent,
                     cursorColor = Color.White,
-                    textColor = Color.White
+                    textColor = Color.White,
                 ),
                 textStyle = TextStyle(
-                    fontSize = 20.sp
-                )
+                    fontSize = 20.sp,
+                ),
             )
         }
     }
 }
 
-
-//if (showDialog) {
+// if (showDialog) {
 //    AlertDialog(
 //        icon = {
 //            Icon(imageVector = Icons.Rounded.Info, contentDescription = "", modifier = modifier.size(40.dp))
@@ -299,14 +300,14 @@ fun EditorScreen(
 //        },
 //        containerColor = Color(android.graphics.Color.parseColor("#C4C4C4"))
 //    )
-//}
+// }
 //
-//Column(
-//modifier = modifier
-//.fillMaxSize()
-//.background(Color(android.graphics.Color.parseColor(("#252525"))))
-//.padding(15.dp)
-//) {
+// Column(
+// modifier = modifier
+// .fillMaxSize()
+// .background(Color(android.graphics.Color.parseColor(("#252525"))))
+// .padding(15.dp)
+// ) {
 //    Row(
 //        modifier = modifier.fillMaxWidth(),
 //        horizontalArrangement = Arrangement.SpaceBetween,
@@ -378,4 +379,4 @@ fun EditorScreen(
 //            fontSize = 20.sp
 //        )
 //    )
-//}
+// }

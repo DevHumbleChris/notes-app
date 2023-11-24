@@ -2,7 +2,6 @@ package com.montana.inc.notes
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,15 +49,15 @@ fun SearchScreen(
         mutableStateOf(false)
     }
     Scaffold(
-        containerColor = Color(android.graphics.Color.parseColor("#252525"))
+        containerColor = Color(android.graphics.Color.parseColor("#252525")),
     ) { innerPadding ->
         Column(
-            modifier = modifier.padding(innerPadding)
+            modifier = modifier.padding(innerPadding),
         ) {
             Column(
                 modifier = modifier
                     .padding(20.dp)
-                    .fillMaxSize()
+                    .fillMaxSize(),
             ) {
                 OutlinedTextField(
                     value = viewModel.query,
@@ -72,7 +71,7 @@ fun SearchScreen(
                     placeholder = {
                         Text(
                             text = "Search by the title...",
-                            color = Color(android.graphics.Color.parseColor("#CCCCCC"))
+                            color = Color(android.graphics.Color.parseColor("#CCCCCC")),
                         )
                     },
                     colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -88,7 +87,7 @@ fun SearchScreen(
                             Icon(
                                 imageVector = Icons.Default.Close,
                                 contentDescription = "Cancel",
-                                tint = Color.White
+                                tint = Color.White,
                             )
                         }
                     },
@@ -97,7 +96,7 @@ fun SearchScreen(
                 if (isSearching) {
                     if (state.searchResults.isNotEmpty()) {
                         LazyColumn(
-                            modifier = modifier.padding(horizontal = 8.dp, vertical = 20.dp)
+                            modifier = modifier.padding(horizontal = 8.dp, vertical = 20.dp),
                         ) {
                             items(state.searchResults) { result ->
                                 Column(
@@ -105,14 +104,14 @@ fun SearchScreen(
                                         .fillMaxWidth()
                                         .background(
                                             Color(android.graphics.Color.parseColor("#91F48F")),
-                                            shape = RoundedCornerShape(percent = 10)
-                                        )
+                                            shape = RoundedCornerShape(percent = 10),
+                                        ),
                                 ) {
                                     Text(
                                         text = result.title,
                                         color = Color.Black,
                                         modifier = Modifier.padding(20.dp),
-                                        fontSize = 20.sp
+                                        fontSize = 20.sp,
                                     )
                                 }
                             }
@@ -121,17 +120,18 @@ fun SearchScreen(
                         Column(
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = modifier.fillMaxSize()
+                            modifier = modifier.fillMaxSize(),
                         ) {
                             Image(
                                 painter = painterResource(id = R.drawable.cuate),
                                 contentDescription = "Note not found image",
-                                modifier = modifier.requiredSize(290.dp)
+                                modifier = modifier.requiredSize(290.dp),
                             )
                             Text(
                                 text = "Note not found. Try searching again.",
-                                color = Color.White, fontSize = 20.sp,
-                                modifier = modifier.offset(y = (-35).dp)
+                                color = Color.White,
+                                fontSize = 20.sp,
+                                modifier = modifier.offset(y = (-35).dp),
                             )
                         }
                     }
@@ -139,16 +139,17 @@ fun SearchScreen(
                     Column(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = modifier.fillMaxSize()
+                        modifier = modifier.fillMaxSize(),
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.search),
                             contentDescription = "Start your search",
-                            modifier = modifier.requiredSize(280.dp)
+                            modifier = modifier.requiredSize(280.dp),
                         )
                         Text(
                             text = "Start your search on the searchbar.",
-                            color = Color.White, fontSize = 20.sp,
+                            color = Color.White,
+                            fontSize = 20.sp,
                         )
                     }
                 }

@@ -1,6 +1,7 @@
 package com.montana.inc.notes
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -41,6 +42,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import de.charlex.compose.RevealDirection
 import de.charlex.compose.RevealSwipe
+import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
@@ -48,6 +50,7 @@ fun Home(
     navHostController: NavHostController,
     modifier: Modifier = Modifier,
     viewModel: NotesViewModel,
+    onNoteClicked: (UUID) -> Unit,
 ) {
     val state = viewModel.currentState.collectAsState().value
     Scaffold(
@@ -161,6 +164,10 @@ fun Home(
                             AddNote(
                                 uuid = note.uuid,
                                 title = note.title,
+                                modifier = Modifier.clickable {
+                                    onNoteClicked.invoke(note.uuid)
+                                },
+
                             )
                         }
                     }
